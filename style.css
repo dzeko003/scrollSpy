@@ -37,3 +37,13 @@ section{
     justify-content: center;
     flex-direction: row;
 }
+
+hr {
+    position: fixed;
+    top: 60%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: red;
+    width: 100%;
+}

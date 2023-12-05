@@ -15,6 +15,8 @@
         <a href="contact.html">contact</a>
     </nav>
 
+    <hr>
+    
     <main>
         <?php for($i=1 ; $i<=4 ; $i++) : ?>
             <section id="section<?= $i ?>" data-spy> 
