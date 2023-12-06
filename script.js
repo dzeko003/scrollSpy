@@ -1,7 +1,8 @@
 
 const ratio = .6
+const spies = document.querySelectorAll('[data-spy]')
+let observer = null;
 
-observer = null;
 
 /**
  * 
@@ -27,20 +28,18 @@ const activate = function (element){
 /**
  * 
  * @param {IntersectionObserverEntry[]} entries 
- * @param {IntersectionObserver} observer 
+ *
  */
-const callback = function (entries, observer){
+const callback = function (entries){
 console.log(entries);
 
 entries.forEach( function (entry){
-    if(entry.intersectionRatio > 0){
+    if(entry.isIntersecting){
         activate(entry.target);
     }
 })
 }
 
-
-const spies = document.querySelectorAll('[data-spy]')
 
 /**
  * 
@@ -49,9 +48,7 @@ const spies = document.querySelectorAll('[data-spy]')
 const observe = function (element) {
 
     if( observer !== null){
-        element.forEach(elem => observer.unobserve(elem)){
-
-        }
+        element.forEach(elem => observer.unobserve(elem))
     }
     const y = Math.round(window.innerHeight * ratio)
 
@@ -59,15 +56,36 @@ const observe = function (element) {
         rootMargin: `-${window.innerHeight - y -1}px 0px -${y}px 0px`
     })
 
-    spies.forEach(function (spy){
-        observer.observe(spy);
-    })
+    spies.forEach((elem) =>  observer.observe(elem) )
+}
+
+/**
+ * 
+ * @param {Function} callback 
+ * @param {number} delay 
+ * @returns {Function}
+ */
+const debounce = function (callback, delay){
+    let timer;
+    return function(){
+        let args = arguments;
+        let context = this;
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+            callback.apply(context, args);
+        }, delay)
+    }
 }
 
 if(spies.length > 0){
     observe(spies);
+    let windowH = window.innerHeight
+    window.addEventListener('resize', debounce(function() {
 
-    window.addEventListener('resize', function() {
-        observe(spies);
-    })
+        if(window.innerHeight !== windowH){
+            observe(spies);
+            console.log('test');
+            windowH = window.innerHeight;
+        }
+    },500))
 }
